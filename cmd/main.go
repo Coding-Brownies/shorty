@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/Coding-Brownies/shorty/handler"
 	"github.com/Coding-Brownies/shorty/store"
@@ -11,10 +12,11 @@ import (
 func main() {
 	// json response
 	r := gin.Default()
+
+	r.LoadHTMLGlob("templates/*")
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message":  "Hey Go URL Shortener !🚀",
-			"long_url": "https://it.everli.com/it/spesa/coop/biella",
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"title": "Hey Go URL Shortener !🚀",
 		})
 	})
 
