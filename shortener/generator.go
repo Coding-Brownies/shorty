@@ -28,9 +28,9 @@ func base58Encoded(bytes []byte) string {
 	return string(encoded)
 }
 
-func GenerateShortLink(initialLink string, userId string) string {
+func GenerateShortLink(initialLink string) string {
 	// Hashing  initialUrl + userId url with sha256.  Here userId is added to prevent providing similar shortened urls to separate users in case they want to shorten exact same link, it's a design decision, so some implementations do this differently
-	urlHashBytes := sha256Of(initialLink + userId)
+	urlHashBytes := sha256Of(initialLink)
 	// Derive a big integer number from the hash bytes generated during the hasing
 	generatedNumber := new(big.Int).SetBytes(urlHashBytes).Uint64()
 	// Apply base58  on the derived big integer value and pick the first 8 characters

@@ -1,0 +1,45 @@
+<html>
+	<h1>
+		{{ .title }}
+	</h1>
+
+    <form onsubmit="event.preventDefault(); create_url();" >
+        <label for="fname">Long url:</label><br>
+        <input type="text" id="fname" name="fname" value="https://www.youtube.com/watch?v=3ExDEeSnyvE"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <a id="res"></a>
+
+
+    <script>
+        const create_url = async () => {
+            let long_url=document.getElementById("fname").value
+            let myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+    
+            let raw = JSON.stringify({
+                "long_url": long_url
+            });
+    
+            let requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            
+            let res = await fetch("http://localhost:9808/create-short-url", requestOptions);
+
+            if (res.status != 200){
+                console.log("error during the request");
+                return;
+            }
+            let body = await res.json();
+
+            let link = document.getElementById("res")
+            link.innerText = body.short_url
+            link.setAttribute("href", body.short_url)
+        }
+    </script>
+</html>
