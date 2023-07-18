@@ -1,45 +1,134 @@
+<!DOCTYPE html>
 <html>
-	<h1>
-		{{ .title }}
-	</h1>
+<head>
+    <title>{{ .title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+        }
 
-    <form onsubmit="event.preventDefault(); create_url();" >
-        <label for="fname">Long url:</label><br>
-        <input type="text" id="fname" name="fname" value="https://www.youtube.com/watch?v=3ExDEeSnyvE"><br>
-        <input type="submit" value="Submit">
-    </form>
+        .container {
+            width: 600px; /* 400-600 Aumenta il valore per rendere il contenitore più grande */
+            padding: 0px;
+            background-color: #f3f3f3;
 
-    <a id="res"></a>
+            display: flex;
+            flex-direction: column;
+            align-items: center;
 
+            /*border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        }
+
+        h1 {
+            color: #555555;
+            text-align: center;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        form {
+            text-align: center;
+            /*margin-top: 20px;*/
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #555555;
+
+            margin-bottom: 10px;
+
+            box-sizing: border-box; /* per avere la barra per i link tutta lunga, include il padding nella larghezza */
+        }
+
+        .submit-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4caf61;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #4caf61;
+        }
+
+        #res {
+            text-align: center;
+            margin-top: 20px;
+            color: #555555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ .title }}</h1>
+
+        <form onsubmit="event.preventDefault(); create_url();">
+            <input type="text" id="long_url" name="long_url" placeholder="https://www.example-long-link.com">
+            <div class="submit-container">
+                <input type="submit" value="Shorten">
+            </div>
+        </form>
+
+        <p id="res"></p>
+    </div>
 
     <script>
         const create_url = async () => {
-            let long_url=document.getElementById("fname").value
+            let long_url = document.getElementById("long_url").value;
             let myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
-    
+
             let raw = JSON.stringify({
                 "long_url": long_url
             });
-    
+
             let requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
                 body: raw,
                 redirect: 'follow'
             };
-            
+
             let res = await fetch("http://localhost:9808/create-short-url", requestOptions);
 
-            if (res.status != 200){
-                console.log("error during the request");
+            if (res.status !== 200) {
+                console.log("Error during the request");
                 return;
             }
+
             let body = await res.json();
 
-            let link = document.getElementById("res")
-            link.innerText = body.short_url
-            link.setAttribute("href", body.short_url)
-        }
+            let link = document.getElementById("res");
+            link.innerHTML = `<a href="${body.short_url}" target="_blank">${body.short_url}</a>`;
+        };
     </script>
+</body>
 </html>

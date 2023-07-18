@@ -16,7 +16,7 @@ func main() {
 	r.LoadHTMLGlob("templates/*")
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "Hey Go URL Shortener !🚀",
+			"title": "Shorty",
 		})
 	})
 
