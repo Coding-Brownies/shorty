@@ -21,9 +21,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-
-            /*border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
         }
 
         h1 {
@@ -36,11 +33,13 @@
 
         form {
             text-align: center;
+            width: 100%;
             /*margin-top: 20px;*/
 
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
+            justify-content: center;
         }
 
         label {
@@ -55,7 +54,8 @@
             font-size: 16px;
             color: #555555;
 
-            margin-bottom: 10px;
+            margin-right: 5px;
+            height: 40px;
 
             box-sizing: border-box; /* per avere la barra per i link tutta lunga, include il padding nella larghezza */
         }
@@ -73,6 +73,7 @@
             border: none;
             font-size: 16px;
             cursor: pointer;
+            height: 40px;
         }
 
         input[type="submit"]:hover {
