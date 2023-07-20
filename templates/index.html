@@ -31,7 +31,7 @@
             align-items: center;
         }
 
-        form {
+        .flex {
             text-align: center;
             width: 100%;
             /*margin-top: 20px;*/
@@ -40,6 +40,18 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+        }
+
+        .button {
+            margin-left: 1rem;
+
+            background: none;
+	        color: inherit;
+	        border: none;
+	        padding: 0;
+	        font: inherit;
+	        cursor: pointer;
+	        outline: inherit;
         }
 
         label {
@@ -54,7 +66,7 @@
             font-size: 16px;
             color: #555555;
 
-            margin-right: 5px;
+            margin-right: 4px;
             height: 40px;
 
             box-sizing: border-box; /* per avere la barra per i link tutta lunga, include il padding nella larghezza */
@@ -85,23 +97,51 @@
             margin-top: 20px;
             color: #555555;
         }
+
+        .hidden{
+            display:none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+
+        <img style="width:20em;" src="mascott.png" alt="mascott.png">
+
         <h1>{{ .title }}</h1>
 
-        <form onsubmit="event.preventDefault(); create_url();">
+        <form class="flex" onsubmit="event.preventDefault(); create_url();">
             <input type="text" id="long_url" name="long_url" placeholder="https://www.example-long-link.com">
             <div class="submit-container">
                 <input type="submit" value="Shorten">
             </div>
         </form>
 
-        <p id="res"></p>
+        <div id="res" class="flex hidden">
+            <a id="res_url" target="_blank"></a>
+
+            <button class="button" onclick="copy()" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                </svg>
+            </button>
+            
+        </div>
+        
     </div>
 
     <script>
+        let short_url="";
+
+         const copy = async () => {
+            try {
+                await navigator.clipboard.writeText(short_url);
+                console.log(short_url);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
         const create_url = async () => {
             let long_url = document.getElementById("long_url").value;
             let myHeaders = new Headers();
@@ -127,8 +167,13 @@
 
             let body = await res.json();
 
-            let link = document.getElementById("res");
-            link.innerHTML = `<a href="${body.short_url}" target="_blank">${body.short_url}</a>`;
+            let resDiv = document.getElementById("res");
+            resDiv.classList.remove("hidden"); 
+            
+            let link = document.getElementById("res_url");
+            short_url=body.short_url;
+            link.innerText = short_url;
+            link.setAttribute("href", short_url);
         };
     </script>
 </body>
